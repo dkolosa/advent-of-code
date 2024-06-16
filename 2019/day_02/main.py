@@ -21,9 +21,11 @@ def main():
     input_seq =  read_file(input_file)
     input_seq[1] = 12
     input_seq[2] = 2
+
     #Iterate over the input by steps of window
     for i in range(0,len(input_seq), window):
         seq = input_seq[i:i+window]
+        op = i
     # check opcode
         if seq[0] == oppcodes[0]:
             print('Answer:',input_seq[0])
@@ -31,9 +33,6 @@ def main():
             input_seq[seq[3]] = input_seq[seq[1]] + input_seq[seq[2]]
         elif seq[0] == oppcodes[2]:
             input_seq[seq[3]] = input_seq[seq[1]] * input_seq[seq[2]]
-
-    # perform + or *
-    # write to 4th index value
 
 
 
