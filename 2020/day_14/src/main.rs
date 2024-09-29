@@ -1,4 +1,4 @@
-use std::{collections::HashMap, io};
+use std::{collections::HashMap, fs::File, io::{self, BufRead}};
 use regex::Regex;
 
 struct B36(u64);
@@ -77,8 +77,8 @@ fn main() {
     extract_values(file_path);
     
 
-
-    bit.apply_mask(&mask);
+    let bit:B36 = B36::new(10);
+    // bit.apply_mask(&mask);
     let index = 7;
     addr_space.insert(index, bit);
 
@@ -98,30 +98,24 @@ fn extract_values(file_path: &str) {
     let reg_mask =  Regex::new(r"mask = ([X01]+)").unwrap();
     let reg_mem = Regex::new(r"mem\[(\d+)\] = (\d+)").unwrap();
 
-    let file = File::open(file_path)?;
+    let file = File::open(file_path).expect("File not found");
     let reader = io::BufReader::new(file);
     
     let mut mask= String::new();
 
 
     for line in reader.lines() {
-        let line = line?;
+        let line = line.expect("Error reading line");
 
-        if let Some(cap) = reg_mask.captures(line){
+        if let Some(cap) = reg_mask.captures(&line){
             mask = cap[1].to_string();
     
         }
 
-        if let Some(cap) = reg_mem.captures(line){
+        if let Some(cap) = reg_mem.captures(&line){
             let address = &cap[1];
             let value = &cap[2];
         }
 
     }
-
-    for cap in mem_re.captures_iter(input_data) {
-        let address = &cap[1];
-        let value = &cap[2];
-        println!("Address: {}, Value: {}", address, value);
-    }
-    }
+}
