@@ -1,4 +1,5 @@
-use std::{collections::HashMap};
+use std::{collections::HashMap, io};
+use regex::Regex;
 
 struct B36(u64);
 
@@ -60,7 +61,6 @@ impl B36 {
     fn apply_mask(&mut self, mask: &String) {
  
         let and_mask: u64 = Self::mask_to_and(mask);
-
         let or_mask: u64 = Self::mask_to_or(mask);
 
         self.0 = (self.0 & and_mask) | or_mask
@@ -73,9 +73,11 @@ fn main() {
 
 
     let mut addr_space: HashMap<i64, B36> = HashMap::new();
+    let file_path = "input.txt";
+    extract_values(file_path);
+    
 
-    let mut bit: B36 = B36::new(11);
-    let mask:String = String::from("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X");
+
     bit.apply_mask(&mask);
     let index = 7;
     addr_space.insert(index, bit);
@@ -90,3 +92,36 @@ fn main() {
     println!("Total sum: {}", sum);
 
 }
+
+fn extract_values(file_path: &str) {
+
+    let reg_mask =  Regex::new(r"mask = ([X01]+)").unwrap();
+    let reg_mem = Regex::new(r"mem\[(\d+)\] = (\d+)").unwrap();
+
+    let file = File::open(file_path)?;
+    let reader = io::BufReader::new(file);
+    
+    let mut mask= String::new();
+
+
+    for line in reader.lines() {
+        let line = line?;
+
+        if let Some(cap) = reg_mask.captures(line){
+            mask = cap[1].to_string();
+    
+        }
+
+        if let Some(cap) = reg_mem.captures(line){
+            let address = &cap[1];
+            let value = &cap[2];
+        }
+
+    }
+
+    for cap in mem_re.captures_iter(input_data) {
+        let address = &cap[1];
+        let value = &cap[2];
+        println!("Address: {}, Value: {}", address, value);
+    }
+    }
